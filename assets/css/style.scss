@@ -96,6 +96,7 @@ nav{
         color: #f2f2ee;
     }
 }
+
 .nav-list {
     display: flex;
     align-items: center;
@@ -300,4 +301,88 @@ footer{
   ::-webkit-scrollbar-thumb:hover {
     background: #B7AD54;
   }
+.custom-button{
+    width: fit-content;
+    background-color: $yellow;
+    align-self: flex-end;
+    padding: 4px 14px;
+    font-weight: 600;
+}
+.posts{
+    width: 100%;
+    max-width: 750px;
+    margin: 60px 0;
+    border: 1px solid $yellow;
+    display: flex;
+    flex-direction: column;
+    border-radius: 4px;
+    .post{
+        border-bottom: 3px solid $lightblue;
+        color: white;
+        padding: 20px 40px;
+        display: flex;
+        flex-direction: column;
+        .username{
+            font-weight: 600;
+        }
+        .date{
+            font-size: small;
+        }
+        .text{
+            font-size: 0.9rem;
+            margin-bottom: 10px !important;
+        }
+        .post-image{
+            align-self: center;
+            aspect-ratio: initial;
+            max-width: 100%;
+            max-height: 500px;
+            margin-bottom: 10px ;
+        }
+        .interact{
+            display: flex;
+            gap: 20px;
+            &>*{
+                display: flex;
+                gap: 5px;
+                font-size: 0.8rem;
+                color: white;
+                text-decoration: none;
+            }
+        }
+    }
+}
 
+.unclick{
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.178);
+    z-index: 20;
+    display: none;
+}
+.custom-modal{
+    display: none;
+    width: 100%;
+    max-width: 700px;
+    background-color: #253250;
+    padding: 40px 20px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    color: white;
+    z-index: 21;
+    border-radius: 8px;
+    textarea{
+        width: 100%;
+        background-color: $lightblue;
+        border-bottom: 1px solid $yellow;
+        resize: none;
+        outline: none;
+        color: white;
+        height: 100px;
+    }
+}

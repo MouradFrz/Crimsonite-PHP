@@ -95,7 +95,7 @@ $feedbacks = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <main>
             <div class="container">
                 <div class="wrapper">
-                    <h2 class="mb-3 feed-title">Feedback</h2>
+                    <h2 class="mb-3 feed-title">Today's headline</h2>
                     <p style="color:white;max-width:900px" class="mb-5 text-center"> <?= $posts[0]['message']; ?> </p>
                     <div style="width:80% ;">
 

@@ -47,20 +47,15 @@ session_start();
                         <img src="./assets/img/logo.png" alt="">
                         <h1>Crimsonite</h1>
                     </div>
-                    <div class="nav-list">
+                    <div class="nav-list links">
                         <ul>
-
-
                             <li><a href="">Home</a></li>
                             <li><a href="">Feed</a></li>
                             <li><a href="dashboard.php">Today's headline</a></li>
-
-
-
-                            <button id="toggle"><i class="bi bi-list"></i></button>
+                            
                         </ul>
                     </div>
-
+                    <button id="toggle"><i class="bi bi-list"></i></button>
                     <div class="nav-list log-btns">
 
                         <ul>
