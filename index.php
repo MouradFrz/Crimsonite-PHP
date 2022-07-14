@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 ?>
 
@@ -10,35 +10,32 @@ session_start();
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crimsonite</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="./assets/css/home.css">
 
 </head>
 
 <body>
-    <div class="cursor"></div>
     <div class="dropdown">
         <ul class="container">
-           
-            <?php if(!isset($_SESSION['loggedin'])){ ?>
             <li><a href="">Home</a></li>
-            <li><a href="">Bookings</a></li>
-            <li><a href="">Socials</a></li>
-            <li><a href="login.php" class="button-login">Login</a></li>
-            <li><a href="register.php" class="button-login">Register</a></li>
+            <li><a href="">Feed</a></li>
+            <li><a href="dashboard.php">Today's headline</a></li>
+            <?php if (!isset($_SESSION['loggedin'])) { ?>
+
+                <li class="d-flex justify-content-center align-items-center"><a href="login.php" class="button-login m-1">Login</a> <a href="register.php" class="button-login m-1">Register</a></li>
             <?php } ?>
-            <?php if(isset($_SESSION['loggedin'])){ ?>
-                <li><a href="dashboard.php">Dashboard</a></li>
-                                <li >
-                                <p class="me-3 text-light text-center" style="margin: 0;"><i class="bi bi-person"></i> <strong><?= $_SESSION['loggedin'] ?></strong></p>
-                            </li>
-                            <li>
-                                <form action="logout.php" method="POST" class="m-0">
-                                    <input type="submit" value="Logout" class="button-login" style="margin:0">
-                                </form>
-                            </li>
+            <?php if (isset($_SESSION['loggedin'])) { ?>
+                <li class="d-flex justify-content-center align-items-center">
+                    <p class="me-3 text-light text-center" style="margin: 0;"><i class="bi bi-person"></i> <strong><?= $_SESSION['loggedin'] ?></strong></p>
+                    <form action="logout.php" method="POST" class="m-0">
+                        <input type="submit" value="Logout" class="button-login" style="margin:0">
+                    </form>
+                </li>
+                <li>
+                    
+                </li>
             <?php } ?>
         </ul>
     </div>
@@ -52,29 +49,39 @@ session_start();
                     </div>
                     <div class="nav-list">
                         <ul>
-                           
-                            <?php if(!isset($_SESSION['loggedin'])){ ?>
-                                <li><a href="">Home</a></li>
-                            <li><a href="">Contacts</a></li>
-                            <li><a href="">Projects</a></li>
-                            <li><a href="login.php" class="button-login">Login</a></li>
-                            <li><a href="register.php" class="button-login">Register</a></li>
-                            <?php } ?>
-                            <?php if(isset($_SESSION['loggedin'])){ ?>
-                                <li><a href="dashboard.php">Dashboard</a></li>
-                                <li>
-                                <p class="me-3 text-light" style="margin: 0;"><i class="bi bi-person"></i> <strong><?= $_SESSION['loggedin'] ?></strong></p>
-                            </li>
-                            <li>
-                                <form action="logout.php" method="POST" class="m-0">
-                                    <input type="submit" value="Logout" class="button-login" style="margin:0">
-                                </form>
-                            </li>
-                            
-                            <?php } ?>
+
+
+                            <li><a href="">Home</a></li>
+                            <li><a href="">Feed</a></li>
+                            <li><a href="dashboard.php">Today's headline</a></li>
+
+
+
                             <button id="toggle"><i class="bi bi-list"></i></button>
                         </ul>
                     </div>
+
+                    <div class="nav-list log-btns">
+
+                        <ul>
+                            <?php if (isset($_SESSION['loggedin'])) { ?>
+                                <li>
+                                    <p class="me-3 text-light" style="margin: 0;"><i class="bi bi-person"></i> <strong><?= $_SESSION['loggedin'] ?></strong></p>
+                                </li>
+                                <li>
+                                    <form action="logout.php" method="POST" class="m-0">
+                                        <input type="submit" value="Logout" class="button-login" style="margin:0">
+                                    </form>
+                                </li>
+
+                            <?php } ?>
+                            <?php if (!isset($_SESSION['loggedin'])) { ?>
+                                <li><a href="login.php" class="button-login">Login</a></li>
+                                <!-- <li><a href="register.php" class="button-login">Register</a></li> -->
+                            <?php } ?>
+                        </ul>
+                    </div>
+
                 </div>
             </div>
         </nav>
@@ -87,6 +94,7 @@ session_start();
                         <span class="js-animate">Crypto as easy as it can be</span>
                         <p class="js-animate">We are a platform where you will learn everything about cryptocurrency
                             You will go from a noobie to a master in 30 days!</p>
+                            <a href="register.php" class="custom-button">Get started!</a>
                     </div>
                 </div>
             </main>
@@ -119,7 +127,7 @@ session_start();
                 <div class="container">
                     <div class="newsletter">
                         <div class="news-card js-fade-in">
-                            <h2 >Newsletter</h2>
+                            <h2>Newsletter</h2>
                             <p>Enter your email to subscribe to our newsletter</p>
                             <input type="text" placeholder="Email">
                             <button>Subscribe</button>
@@ -170,43 +178,11 @@ session_start();
                     </div>
                 </div>
             </section>
-            <footer>
-                <div class="container">
-                    <div class="footer-wrapper">
-                        <img src="./assets/img/logo.png" alt="">
-                        <div class="sides">
-                            <div class="left">
-                                <h1>Crimsonite</h1>
-                                <p>We are a platform where you will learn everything about cryptocurrency
-                                    You will go from a noobie to a master in 30 days!</p>
-                            </div>
-                            <div class="right">
-                                <h2>Navigate</h2>
-                                <ul>
-                                    <li><a href="">Home</a></li>
-                                    <li><a href="">Services</a></li>
-                                    <li><a href="">How to</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="socials">
-                            <a href=""><i class="bi bi-facebook"></i></a>
-                            <a href=""><i class="bi bi-instagram"></i></a>
-                            <a href=""><i class="bi bi-google"></i></a>
-                            <a href=""><i class="bi bi-linkedin"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </footer>
+            <?php
+            include 'footer.php';
+            ?>
         </div>
     </div>
-    <script>
-        const cursor = document.querySelector('.cursor')
-
-        document.addEventListener('mousemove', e => {
-            cursor.setAttribute("style", `top:${e.pageY}px;left:${e.pageX}px`);
-        })
-    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/ScrollTrigger.min.js"></script>
     <script src="./assets/js/main.js"></script>

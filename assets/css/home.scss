@@ -12,7 +12,6 @@ $lightblue:#253250;
 }
 body{
     position: relative;
-    cursor: none;
     overflow-x: hidden;
 }
 .dropdown{
@@ -70,6 +69,20 @@ nav{
     justify-content: space-between;
 
 }
+.custom-button{
+    text-decoration: none;
+    padding: 8px 18px;
+    background-color: $yellow;
+    border: 1px solid $lightblue;
+    color: $darkblue;
+    font-weight: 700;
+    border-radius: 4px;
+    font-size: 1.2rem;
+    opacity: 0.95;
+    &:hover{
+        color: $darkblue;
+    }
+}
 .nav-brand {
     display: flex;
     align-items: center;
@@ -86,15 +99,24 @@ nav{
         color: #f2f2ee;
     }
 }
+.log-btns{
+    @media (max-width:992px){
+        display: none !important;
+    }
+  
+}
 .nav-list {
     display: flex;
     align-items: center;
+    
+    
     ul {
         display: flex;
         gap: 10px;
         list-style: none;
         align-items: center;
         margin: 0;
+        padding: 0;
         a {
             font-size: 1.1rem;
             text-decoration: none;
@@ -121,7 +143,7 @@ nav{
             border: none;
             background-color: #E7E27C;
             font-weight: 600;
-            padding: 4px 22px;
+            padding: 4px 28px;
             border-radius: 2px;
             color: #0E1422;
             &:hover {
@@ -386,7 +408,7 @@ footer{
     flex-direction: column;
     justify-content: center;
     color: white;
-    padding: 40px 100px;
+    padding: 40px 100px 0 100px;
     @media (max-width:992px) {
         padding: 0;
     }
@@ -464,17 +486,4 @@ footer{
   /* Handle on hover */
   ::-webkit-scrollbar-thumb:hover {
     background: #B7AD54;
-  }
-  .cursor{
-    background-color: $lightblue;
-    border: 1px solid $yellow; 
-    height: 15px;
-    width: 15px;
-    position: absolute;
-    border-radius: 50%;
-    z-index: 100;
-    opacity: 0.8;
-    // transform: translate(-50%,-50%);
-    transition-duration: 50ms;
-    transition-timing-function: ease;
   }

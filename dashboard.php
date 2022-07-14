@@ -61,15 +61,11 @@ $feedbacks = $stmt->fetchAll(PDO::FETCH_ASSOC);
             justify-content: center;
             width: 100%;
         }
-
-        body {
-            padding-bottom: 5rem;
-        }
     </style>
 </head>
 
 <body>
-    <div class="cursor"></div>
+
     <div class="notification">
         <p></p>
     </div>
@@ -130,14 +126,11 @@ $feedbacks = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
             </div>
         </main>
+        <?php 
+            include 'footer.php';
+            ?>
     </div>
-    <script>
-        const cursor = document.querySelector('.cursor')
 
-        document.addEventListener('mousemove', e => {
-            cursor.setAttribute("style", `top:${e.pageY}px;left:${e.pageX}px`);
-        })
-    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
     <script>
         let success = false;
