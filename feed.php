@@ -5,8 +5,24 @@ if (!isset($_SESSION['loggedin'])) {
 include './classes/db.php';
 
 $pdo = dbConnection::connect();
-$posts = $pdo->query('SELECT * FROM feedposts');
+$posts = $pdo->query('SELECT * FROM feedposts ORDER BY created_at desc');
 $posts = $posts->fetchAll(PDO::FETCH_ASSOC);
+
+if($_SERVER['REQUEST_METHOD']==="POST"){
+    $text = $_POST['text'];
+    if(!empty($_FILES['myImage']['name'])){
+        $file_tmp = $_FILES['myImage']['tmp_name'];
+        $ext = explode('.',$_FILES['myImage']['name']);
+        $ext = $ext[count($ext)-1];
+        $file_name=time().$_SESSION['loggedin'].'.'.$ext;
+        move_uploaded_file($file_tmp,"assets/img/posts/${file_name}");
+    }
+
+    $stmt = $pdo->prepare('INSERT INTO feedposts (username,likes,text,image,created_at) values (?,0,?,?,?)');
+    $stmt->execute([$_SESSION['loggedin'],$text,$file_name ?? null,date('Y-m-d H:i:s', time())]);
+    $pdo = null;
+    header('Location: feed.php');
+}
 ?>
 
 
@@ -29,10 +45,10 @@ $posts = $posts->fetchAll(PDO::FETCH_ASSOC);
     </div>
     <div class="custom-modal">
         <h1>Create a new post</h1>
-        <form action="">
+        <form action="feed.php" method="post" enctype="multipart/form-data">
             <label for="">Text</label>
-            <textarea name="" id=""></textarea>
-            <input type="file" name="" class="form-control" id="">
+            <textarea name="text" id=""></textarea>
+            <input type="file" accept="image/*" name="myImage" class="form-control" id="">
             <input type="submit" class="cbtn mt-2" value="Create">
         </form>
     </div>
@@ -69,7 +85,7 @@ $posts = $posts->fetchAll(PDO::FETCH_ASSOC);
                         <button class="custom-button" id="new-post">Create a new post</button>
                     </div>
                     <div class="posts mt-0">
-
+<!-- 
                         <div class="post">
                             <p class="username"><i class="bi bi-person"></i> Username</p>
                             <p class="date text-muted">01/01/2001 34:22:31</p>
@@ -85,7 +101,7 @@ $posts = $posts->fetchAll(PDO::FETCH_ASSOC);
                                     <p>Comments</p>
                                 </a>
                             </div>
-                        </div>
+                        </div> -->
                         <?php foreach ($posts as $index => $post) { ?>
                             <div class="post">
                                 <p class="username"><i class="bi bi-person"></i> <?= $post['username'] ?> </p>

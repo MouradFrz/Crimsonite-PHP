@@ -49,8 +49,8 @@ session_start();
                     </div>
                     <div class="nav-list links">
                         <ul>
-                            <li><a href="">Home</a></li>
-                            <li><a href="">Feed</a></li>
+                            <li><a href="#">Home</a></li>
+                            <li><a href="feed.php">Feed</a></li>
                             <li><a href="dashboard.php">Today's headline</a></li>
                             
                         </ul>
