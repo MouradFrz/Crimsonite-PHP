@@ -51,8 +51,7 @@ session_start();
                         <ul>
                             <li><a href="#">Home</a></li>
                             <li><a href="feed.php">Feed</a></li>
-                            <li><a href="dashboard.php">Today's headline</a></li>
-                            
+                            <li><a href="dashboard.php">Today's headline</a></li> 
                         </ul>
                     </div>
                     <button id="toggle"><i class="bi bi-list"></i></button>

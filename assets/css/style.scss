@@ -317,7 +317,10 @@ footer{
     flex-direction: column;
     border-radius: 4px;
     .post{
-        border-bottom: 3px solid $lightblue;
+        // border-bottom: 3px solid $lightblue;
+        border-bottom: 1px solid transparent;
+        border-image: linear-gradient(90deg, $darkblue 10%, $yellow 50%, $darkblue 90%);;
+        border-image-slice: 1;
         color: white;
         padding: 20px 40px;
         display: flex;
@@ -348,6 +351,7 @@ footer{
                 font-size: 0.8rem;
                 color: white;
                 text-decoration: none;
+                cursor:pointer;
             }
         }
     }
@@ -359,12 +363,13 @@ footer{
     position: fixed;
     top: 0;
     left: 0;
-    background-color: rgba(0, 0, 0, 0.178);
+    background-color: rgba(56, 56, 56, 0.6);
     z-index: 20;
     display: none;
 }
+
 .custom-modal{
-    display: none;
+    opacity: 0;
     width: 100%;
     max-width: 700px;
     background-color: #253250;
@@ -372,9 +377,10 @@ footer{
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%,-100vh);
     color: white;
-    z-index: 21;
+    transition: 0.4s ease;
+    z-index: 21;    
     border-radius: 8px;
     textarea{
         width: 100%;
@@ -385,4 +391,10 @@ footer{
         color: white;
         height: 100px;
     }
+}
+
+
+.custom-modal.show{
+    opacity: 1;
+    transform: translate(-50%,-50%);
 }

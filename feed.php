@@ -3,10 +3,18 @@ if (!isset($_SESSION['loggedin'])) {
     header('Location: login.php');
 }
 include './classes/db.php';
-
+$username = $_SESSION['loggedin'];
 $pdo = dbConnection::connect();
 $posts = $pdo->query('SELECT * FROM feedposts ORDER BY created_at desc');
 $posts = $posts->fetchAll(PDO::FETCH_ASSOC);
+
+$likedposts = $pdo->query("SELECT feedpostid from likes WHERE username='${username}';");
+$likedposts = $likedposts->fetchAll(PDO::FETCH_ASSOC);
+$likedpostslist=[];
+foreach($likedposts as $index=>$post){
+    $likedpostslist[]=$post['feedpostid'];
+}
+
 
 if($_SERVER['REQUEST_METHOD']==="POST"){
     $text = $_POST['text'];
@@ -111,12 +119,11 @@ if($_SERVER['REQUEST_METHOD']==="POST"){
                                     <img class="post-image" src="assets/img/posts/<?= $post['image'] ?>" alt="">
                                 <?php } ?>
                                 <div class="interact">
-                                    <a class="like" href="#">
-                                        <i class="bi bi-heart"></i>
-                                        <p>Favorite <span class="text-muted"><?= $post['likes'] ?></span></p>
-
+                                    <a class="like"  data-id=<?= $post['id'] ?>>
+                                        <i data-id=<?= $post['id'] ?> class="bi bi-heart<?php if(in_array($post['id'], $likedpostslist)){echo '-fill';} ?>"></i>
+                                        <p>Favorite <span data-id=<?= $post['id'] ?> class="text-muted" ><?= $post['likes'] ?></span></p>
                                     </a>
-                                    <a class="view-more" href="#">
+                                    <a class="view-more" >
                                         <i class="bi bi-list"></i>
                                         <p>Comments</p>
                                     </a>
@@ -130,14 +137,51 @@ if($_SERVER['REQUEST_METHOD']==="POST"){
             </div>
         </main>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
     <script>
         document.querySelector('.unclick').addEventListener('click', () => {
             document.querySelector('.unclick').style.display = 'none';
-            document.querySelector('.custom-modal').style.display = 'none';
+            document.querySelector('.custom-modal').classList.remove('show');
         })
         document.querySelector('#new-post').addEventListener('click', () => {
             document.querySelector('.unclick').style.display = 'flex';
-            document.querySelector('.custom-modal').style.display = 'block';
+            document.querySelector('.custom-modal').classList.add('show');
+        })
+    </script>
+    <script>
+        let likes = document.querySelectorAll('.like');
+        likes.forEach(e=>{
+            e.addEventListener('click',()=>{
+                let myIcon = document.querySelector(`i[data-id="${e.dataset.id}"]`);
+                if(myIcon.classList.contains('bi-heart-fill')){
+                    $.ajax({
+                    type: "POST",
+                    url: 'unlike.php',
+                    data: {
+                        id: e.dataset.id,
+                    },
+                    success: function(res) {
+                        myIcon.classList.remove('bi-heart-fill')
+                        myIcon.classList.add('bi-heart')
+                        document.querySelector(`span[data-id="${e.dataset.id}"]`).textContent=res
+                    }
+                })
+                }else{
+                    $.ajax({
+                    type: "POST",
+                    url: 'like.php',
+                    data: {
+                        id: e.dataset.id,
+                    },
+                    success: function(res) {
+                        myIcon.classList.remove('bi-heart')
+                        myIcon.classList.add('bi-heart-fill')
+                        document.querySelector(`span[data-id="${e.dataset.id}"]`).textContent=res
+                    }
+                })
+                }
+
+            })
         })
     </script>
 </body>
