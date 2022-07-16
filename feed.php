@@ -48,6 +48,9 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 </head>
 
 <body>
+    <div class="notification">
+        <p></p>
+    </div>
     <div class="unclick">
 
     </div>
@@ -58,13 +61,12 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
             <p class="text"></p>
             <img class="post-image" src="" alt="">
             <div class="comments">
-                <div class="comment">
-                    <p class="username"><i class="bi bi-person"></i> mourad </p>
-                    <p class="date text-muted">09/09/2001 22:00:24</p>
-                    <p class="text">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Excepturi accusantium accusamus similique adipisci repellat, praesentium perferendis suscipit rerum! Adipisci, rerum?</p>
-                </div>
             </div>
-
+            <form action="comment.php" method="post" class="d-flex align-items-center">
+                <input type="text" name="postid" style="display:none;" id="postid">
+                <input type="text" name="comment" placeholder="Comment here...." class="custom-input mb-0">
+                <button class="send-button"><i class="bi bi-send"></i></button>
+            </form>
         </div>
     </div>
     <div class="custom-modal">
@@ -76,9 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
             <input type="submit" class="cbtn mt-2" value="Create">
         </form>
     </div>
-    <div class="notification">
-        <p></p>
-    </div>
+
     <div>
         <nav>
             <div class="container">
@@ -201,15 +201,18 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                 posttext.textContent = document.querySelector(`p.text[data-id="${e.dataset.id}"]`).textContent
                 postusername.textContent = document.querySelector(`p.username[data-id="${e.dataset.id}"]`).textContent
                 postdate.textContent = document.querySelector(`p.date[data-id="${e.dataset.id}"]`).textContent
-                if(document.querySelector(`img.post-image[data-id="${e.dataset.id}"]`)){
-                postimage.setAttribute('src', document.querySelector(`img.post-image[data-id="${e.dataset.id}"]`).src)
+                if (document.querySelector(`img.post-image[data-id="${e.dataset.id}"]`)) {
+                    postimage.setAttribute('src', document.querySelector(`img.post-image[data-id="${e.dataset.id}"]`).src)
+                } else {
+                    postimage.setAttribute('src', '')
                 }
                 document.querySelector('.unclick').style.display = 'flex';
                 document.querySelector('.details-panel').classList.add('show');
 
                 //clearing the old loaded comments
                 document.querySelector('.comments').textContent = '';
-
+                //setting the value for the comments form
+                document.querySelector('#postid').setAttribute('value', ID);
                 //loading comments for current post
                 $.ajax({
                     type: "POST",
@@ -219,7 +222,6 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                     },
                     success: function(res) {
                         let data = JSON.parse(res);
-                        console.log(data)
                         data.forEach(obj => {
                             let mydiv = document.createElement('div')
                             mydiv.classList.add('comment')
@@ -233,6 +235,36 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
             })
         })
+    </script>
+    <script>
+        let commentedpost = null;
+        let unvalid = null;
+        <?php if (isset($_SESSION['postid'])) { ?>
+            commentedpost = <?= $_SESSION['postid'] ?>;
+            <?php if (isset($_SESSION['unvalid'])) { ?>
+                unvalid = <?= $_SESSION['unvalid'] ?>;
+            <?php } ?>
+
+        <?php
+            $_SESSION['postid'] = null;
+            $_SESSION['unvalid'] = null;
+        } ?>
+        if (commentedpost) {
+            document.querySelector(`.view-more[data-id="${commentedpost}"]`).click()
+            const notification = document.querySelector('.notification');
+            const notificationMessage = document.querySelector('.notification>p');
+            console.log(commentedpost)
+            if (unvalid) {
+                notificationMessage.textContent = "Your comment is unvalid";
+            } else {
+                notificationMessage.textContent = "Comment sent successfully!";
+            }
+
+            notification.classList.toggle('show');
+            setTimeout(() => {
+                notification.classList.toggle('show');
+            }, 2000);
+        }
     </script>
 </body>
 

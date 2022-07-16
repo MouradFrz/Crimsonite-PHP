@@ -187,7 +187,7 @@ nav{
 
 .notification{
     position: fixed;
-    z-index: 15;
+    z-index: 30;
     top: -100%;
     left: 50%;
     max-width: 100%;
@@ -382,9 +382,8 @@ footer{
     }
 }
 .comment{
-    padding: 0;
+    padding: 0 0 0 20px ;
     border-bottom: 1px solid transparent;
-    
     border-image: linear-gradient(90deg, $lightblue 10%, $yellow 50%, $lightblue 90%);
     border-image-slice: 1;
 }
@@ -453,4 +452,9 @@ footer{
 .details-panel.show{
     opacity: 1;
     transform: translate(-50%,-50%);
+}
+.send-button{
+all: unset;
+padding: 5px;
+font-size: 1.1rem;
 }
