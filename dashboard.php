@@ -3,6 +3,7 @@ session_start();
 if (!isset($_SESSION['loggedin'])) {
     header('Location: login.php');
 }
+
 include './classes/db.php';
 $pdo = dbConnection::connect();
 
@@ -65,7 +66,7 @@ $feedbacks = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 
 <body>
-
+       
     <div class="notification">
         <p></p>
     </div>

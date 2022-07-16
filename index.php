@@ -19,8 +19,8 @@ session_start();
 <body>
     <div class="dropdown">
         <ul class="container">
-            <li><a href="">Home</a></li>
-            <li><a href="">Feed</a></li>
+            <li><a href="#">Home</a></li>
+            <li><a href="feed.php">Feed</a></li>
             <li><a href="dashboard.php">Today's headline</a></li>
             <?php if (!isset($_SESSION['loggedin'])) { ?>
 
@@ -34,7 +34,7 @@ session_start();
                     </form>
                 </li>
                 <li>
-                    
+
                 </li>
             <?php } ?>
         </ul>
@@ -51,7 +51,7 @@ session_start();
                         <ul>
                             <li><a href="#">Home</a></li>
                             <li><a href="feed.php">Feed</a></li>
-                            <li><a href="dashboard.php">Today's headline</a></li> 
+                            <li><a href="dashboard.php">Today's headline</a></li>
                         </ul>
                     </div>
                     <button id="toggle"><i class="bi bi-list"></i></button>
@@ -88,7 +88,7 @@ session_start();
                         <span class="js-animate">Crypto as easy as it can be</span>
                         <p class="js-animate">We are a platform where you will learn everything about cryptocurrency
                             You will go from a noobie to a master in 30 days!</p>
-                            <a href="register.php" class="custom-button">Get started!</a>
+                        <a href="register.php" class="custom-button">Get started!</a>
                     </div>
                 </div>
             </main>

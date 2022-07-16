@@ -10,24 +10,24 @@ $posts = $posts->fetchAll(PDO::FETCH_ASSOC);
 
 $likedposts = $pdo->query("SELECT feedpostid from likes WHERE username='${username}';");
 $likedposts = $likedposts->fetchAll(PDO::FETCH_ASSOC);
-$likedpostslist=[];
-foreach($likedposts as $index=>$post){
-    $likedpostslist[]=$post['feedpostid'];
+$likedpostslist = [];
+foreach ($likedposts as $index => $post) {
+    $likedpostslist[] = $post['feedpostid'];
 }
 
 
-if($_SERVER['REQUEST_METHOD']==="POST"){
+if ($_SERVER['REQUEST_METHOD'] === "POST") {
     $text = $_POST['text'];
-    if(!empty($_FILES['myImage']['name'])){
+    if (!empty($_FILES['myImage']['name'])) {
         $file_tmp = $_FILES['myImage']['tmp_name'];
-        $ext = explode('.',$_FILES['myImage']['name']);
-        $ext = $ext[count($ext)-1];
-        $file_name=time().$_SESSION['loggedin'].'.'.$ext;
-        move_uploaded_file($file_tmp,"assets/img/posts/${file_name}");
+        $ext = explode('.', $_FILES['myImage']['name']);
+        $ext = $ext[count($ext) - 1];
+        $file_name = time() . $_SESSION['loggedin'] . '.' . $ext;
+        move_uploaded_file($file_tmp, "assets/img/posts/${file_name}");
     }
 
     $stmt = $pdo->prepare('INSERT INTO feedposts (username,likes,text,image,created_at) values (?,0,?,?,?)');
-    $stmt->execute([$_SESSION['loggedin'],$text,$file_name ?? null,date('Y-m-d H:i:s', time())]);
+    $stmt->execute([$_SESSION['loggedin'], $text, $file_name ?? null, date('Y-m-d H:i:s', time())]);
     $pdo = null;
     header('Location: feed.php');
 }
@@ -50,6 +50,22 @@ if($_SERVER['REQUEST_METHOD']==="POST"){
 <body>
     <div class="unclick">
 
+    </div>
+    <div class="details-panel">
+        <div class="post-details">
+            <p class="username"><i class="bi bi-person"></i> </p>
+            <p class="date text-muted"></p>
+            <p class="text"></p>
+            <img class="post-image" src="" alt="">
+            <div class="comments">
+                <div class="comment">
+                    <p class="username"><i class="bi bi-person"></i> mourad </p>
+                    <p class="date text-muted">09/09/2001 22:00:24</p>
+                    <p class="text">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Excepturi accusantium accusamus similique adipisci repellat, praesentium perferendis suscipit rerum! Adipisci, rerum?</p>
+                </div>
+            </div>
+
+        </div>
     </div>
     <div class="custom-modal">
         <h1>Create a new post</h1>
@@ -93,37 +109,22 @@ if($_SERVER['REQUEST_METHOD']==="POST"){
                         <button class="custom-button" id="new-post">Create a new post</button>
                     </div>
                     <div class="posts mt-0">
-<!-- 
-                        <div class="post">
-                            <p class="username"><i class="bi bi-person"></i> Username</p>
-                            <p class="date text-muted">01/01/2001 34:22:31</p>
-                            <p class="text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia, dolorum ab velit quidem temporibus labore reprehenderit voluptas optio quos explicabo, distinctio odit accusantium repudiandae cum?</p>
-                            <img class="post-image" src="assets/img/posts/wallpaper.jpg" alt="">
-                            <div class="interact">
-                                <a class="like" href="#">
-                                    <i class="bi bi-heart"></i>
-                                    <p>Favorite</p>
-                                </a>
-                                <a class="view-more" href="#">
-                                    <i class="bi bi-list"></i>
-                                    <p>Comments</p>
-                                </a>
-                            </div>
-                        </div> -->
                         <?php foreach ($posts as $index => $post) { ?>
                             <div class="post">
-                                <p class="username"><i class="bi bi-person"></i> <?= $post['username'] ?> </p>
-                                <p class="date text-muted"><?= $post['created_at'] ?></p>
-                                <p class="text"><?= $post['text'] ?></p>
+                                <p class="username" data-id=<?= $post['id'] ?>><i class="bi bi-person"></i> <?= $post['username'] ?> </p>
+                                <p class="date text-muted" data-id=<?= $post['id'] ?>><?= $post['created_at'] ?></p>
+                                <p class="text" data-id=<?= $post['id'] ?>><?= $post['text'] ?></p>
                                 <?php if (isset($post['image'])) { ?>
-                                    <img class="post-image" src="assets/img/posts/<?= $post['image'] ?>" alt="">
+                                    <img data-id=<?= $post['id'] ?> class="post-image" src="assets/img/posts/<?= $post['image'] ?>" alt="">
                                 <?php } ?>
                                 <div class="interact">
-                                    <a class="like"  data-id=<?= $post['id'] ?>>
-                                        <i data-id=<?= $post['id'] ?> class="bi bi-heart<?php if(in_array($post['id'], $likedpostslist)){echo '-fill';} ?>"></i>
-                                        <p>Favorite <span data-id=<?= $post['id'] ?> class="text-muted" ><?= $post['likes'] ?></span></p>
+                                    <a class="like" data-id=<?= $post['id'] ?>>
+                                        <i data-id=<?= $post['id'] ?> class="bi bi-heart<?php if (in_array($post['id'], $likedpostslist)) {
+                                                                                            echo '-fill';
+                                                                                        } ?>"></i>
+                                        <p>Favorite <span data-id=<?= $post['id'] ?> class="text-muted"><?= $post['likes'] ?></span></p>
                                     </a>
-                                    <a class="view-more" >
+                                    <a class="view-more" data-id=<?= $post['id'] ?>>
                                         <i class="bi bi-list"></i>
                                         <p>Comments</p>
                                     </a>
@@ -142,6 +143,7 @@ if($_SERVER['REQUEST_METHOD']==="POST"){
         document.querySelector('.unclick').addEventListener('click', () => {
             document.querySelector('.unclick').style.display = 'none';
             document.querySelector('.custom-modal').classList.remove('show');
+            document.querySelector('.details-panel').classList.remove('show');
         })
         document.querySelector('#new-post').addEventListener('click', () => {
             document.querySelector('.unclick').style.display = 'flex';
@@ -150,36 +152,84 @@ if($_SERVER['REQUEST_METHOD']==="POST"){
     </script>
     <script>
         let likes = document.querySelectorAll('.like');
-        likes.forEach(e=>{
-            e.addEventListener('click',()=>{
+        likes.forEach(e => {
+            e.addEventListener('click', () => {
                 let myIcon = document.querySelector(`i[data-id="${e.dataset.id}"]`);
-                if(myIcon.classList.contains('bi-heart-fill')){
+                if (myIcon.classList.contains('bi-heart-fill')) {
                     $.ajax({
-                    type: "POST",
-                    url: 'unlike.php',
-                    data: {
-                        id: e.dataset.id,
-                    },
-                    success: function(res) {
-                        myIcon.classList.remove('bi-heart-fill')
-                        myIcon.classList.add('bi-heart')
-                        document.querySelector(`span[data-id="${e.dataset.id}"]`).textContent=res
-                    }
-                })
-                }else{
+                        type: "POST",
+                        url: 'unlike.php',
+                        data: {
+                            id: e.dataset.id,
+                        },
+                        success: function(res) {
+                            myIcon.classList.remove('bi-heart-fill')
+                            myIcon.classList.add('bi-heart')
+                            document.querySelector(`span[data-id="${e.dataset.id}"]`).textContent = res
+                        }
+                    })
+                } else {
                     $.ajax({
-                    type: "POST",
-                    url: 'like.php',
-                    data: {
-                        id: e.dataset.id,
-                    },
-                    success: function(res) {
-                        myIcon.classList.remove('bi-heart')
-                        myIcon.classList.add('bi-heart-fill')
-                        document.querySelector(`span[data-id="${e.dataset.id}"]`).textContent=res
-                    }
-                })
+                        type: "POST",
+                        url: 'like.php',
+                        data: {
+                            id: e.dataset.id,
+                        },
+                        success: function(res) {
+                            myIcon.classList.remove('bi-heart')
+                            myIcon.classList.add('bi-heart-fill')
+                            document.querySelector(`span[data-id="${e.dataset.id}"]`).textContent = res
+                        }
+                    })
                 }
+
+            })
+        })
+    </script>
+    <script>
+        const comments = document.querySelectorAll('.view-more');
+        const posttext = document.querySelector('.post-details>.text')
+        const postusername = document.querySelector('.post-details>.username')
+        const postdate = document.querySelector('.post-details>.date')
+        const postimage = document.querySelector('.post-details>.post-image')
+
+
+        comments.forEach(e => {
+            e.addEventListener('click', () => {
+                //loading the right post following the id data attribute
+                let ID = e.dataset.id
+                posttext.textContent = document.querySelector(`p.text[data-id="${e.dataset.id}"]`).textContent
+                postusername.textContent = document.querySelector(`p.username[data-id="${e.dataset.id}"]`).textContent
+                postdate.textContent = document.querySelector(`p.date[data-id="${e.dataset.id}"]`).textContent
+                if(document.querySelector(`img.post-image[data-id="${e.dataset.id}"]`)){
+                postimage.setAttribute('src', document.querySelector(`img.post-image[data-id="${e.dataset.id}"]`).src)
+                }
+                document.querySelector('.unclick').style.display = 'flex';
+                document.querySelector('.details-panel').classList.add('show');
+
+                //clearing the old loaded comments
+                document.querySelector('.comments').textContent = '';
+
+                //loading comments for current post
+                $.ajax({
+                    type: "POST",
+                    url: 'getComments.php',
+                    data: {
+                        id: e.dataset.id,
+                    },
+                    success: function(res) {
+                        let data = JSON.parse(res);
+                        console.log(data)
+                        data.forEach(obj => {
+                            let mydiv = document.createElement('div')
+                            mydiv.classList.add('comment')
+                            mydiv.innerHTML = `<p class="username"><i class="bi bi-person"></i>${obj.username} </p>
+                                                <p class="date text-muted">${obj.created_at}</p>
+                                                <p class="text">${obj.text}</p>`;
+                            document.querySelector('.comments').appendChild(mydiv);
+                        })
+                    }
+                })
 
             })
         })
