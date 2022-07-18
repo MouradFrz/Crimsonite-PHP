@@ -22,7 +22,7 @@ session_start();
             $stmt->execute([$postid]);
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             print_r($result[0]["count('feedpostid')"]);
-        }catch(PDOException){
+        }catch(PDOException $e){
             $stmt = $pdo->prepare("SELECT count('feedpostid') from likes where feedpostid=?");
             $stmt->execute([$postid]);
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);

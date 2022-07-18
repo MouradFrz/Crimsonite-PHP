@@ -3,49 +3,33 @@ session_start();
 if (!isset($_SESSION['loggedin'])) {
     header('Location: login.php');
 }
-
 include './classes/db.php';
 $pdo = dbConnection::connect();
-
-
-
 $stmt1 = $pdo->prepare('SELECT * FROM posts ORDER BY created_at DESC;');
-
 $stmt1->execute();
 $posts = $stmt1->fetchAll(PDO::FETCH_ASSOC);
-
 $earlier = new DateTime($posts[0]['created_at']);
 $later = new DateTime();
-
-
-
 $pos_diff = $earlier->diff($later)->format("%r%a"); //3
 if ($pos_diff != 0) {
     $curl = curl_init();
-    $url = 'https://finnhub.io/api/v1/news?category=general&token=cb42t6iad3i5aivhfgb0';
-    curl_setopt($curl,CURLOPT_URL,$url);
-    curl_setopt($curl,CURLOPT_RETURNTRANSFER,true);
+    $url = 'https://finnhub.io/api/v1/news?category=business&token=cb42t6iad3i5aivhfgb0';
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     $resp = curl_exec($curl);
-
-
-    
+    $text = json_decode($resp)[rand(0, count(json_decode($resp)) - 1)]->summary;
     $stmt1 = $pdo->prepare('INSERT into posts (`message`,`created_at`) values (?,now());');
-    $stmt1->execute([json_decode($resp)[rand(0,count(json_decode($resp))-1)]->summary]);
+    $stmt1->execute([$text]);
 }
-
 $stmt1 = $pdo->prepare('SELECT * FROM posts ORDER BY created_at DESC;');
 $stmt1->execute();
 $posts = $stmt1->fetchAll(PDO::FETCH_ASSOC);
-
-
 $stmt = $pdo->prepare('SELECT * FROM feedback WHERE post=? ORDER BY created_at DESC;');
 $stmt->execute([$posts[0]['id']]);
 $feedbacks = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -58,15 +42,13 @@ $feedbacks = $stmt->fetchAll(PDO::FETCH_ASSOC);
         .wrapper {
             display: flex;
             align-items: center;
-            flex-direction: column;
             justify-content: center;
+            flex-direction: column;
             width: 100%;
         }
     </style>
 </head>
-
 <body>
-       
     <div class="notification">
         <p></p>
     </div>
@@ -99,7 +81,6 @@ $feedbacks = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <h2 class="mb-3 feed-title">Today's headline</h2>
                     <p style="color:white;max-width:900px" class="mb-5 text-center"> <?= $posts[0]['message']; ?> </p>
                     <div style="width:80% ;">
-
                         <?php
                         if (count($feedbacks)) {
                             foreach ($feedbacks as $index => $feedback) {
@@ -127,11 +108,10 @@ $feedbacks = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
             </div>
         </main>
-        <?php 
-            include 'footer.php';
-            ?>
+        <?php
+        include 'footer.php';
+        ?>
     </div>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
     <script>
         let success = false;
@@ -140,7 +120,6 @@ $feedbacks = $stmt->fetchAll(PDO::FETCH_ASSOC);
             success = true;
         <?php $_SESSION['success'] = false;
         } ?>
-
         const notification = document.querySelector('.notification');
         const notificationMessage = document.querySelector('.notification>p');
         if (success) {
@@ -150,7 +129,6 @@ $feedbacks = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 notification.classList.toggle('show');
             }, 2000);
         }
-
         const icons = document.querySelectorAll('.bi-pencil');
         const checks = document.querySelectorAll('.bi-check-lg');
         let oldMessage;
@@ -162,10 +140,8 @@ $feedbacks = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 document.querySelector(`.bi-check-lg[data-id="${e.dataset.id}"]`).style.display = "block";
             })
         })
-
         checks.forEach(e => {
             e.addEventListener('click', () => {
-
                 $.ajax({
                     type: "POST",
                     url: '/editfeedback.php',
@@ -188,10 +164,6 @@ $feedbacks = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         }, 2000);
                     }
                 })
-
-
-
-
             })
         })
     </script>
